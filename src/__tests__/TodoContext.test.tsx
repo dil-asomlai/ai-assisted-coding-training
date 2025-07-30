@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TodoProvider } from '../contexts/TodoContext';
 import { useTodo } from '../hooks/useTodo';
-// import { act } from 'react-dom/test-utils';
 
 const TestComponent = () => {
   const { todos, addTodo, toggleTodoCompletion, deleteTodo } = useTodo();
@@ -32,7 +32,35 @@ const TestComponent = () => {
   );
 };
 
+// Mock sessionStorage for clean test isolation
+const mockSessionStorage = (() => {
+  let store: { [key: string]: string } = {};
+
+  return {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
+  };
+})();
+
+// Replace global sessionStorage with mock
+Object.defineProperty(window, 'sessionStorage', {
+  value: mockSessionStorage,
+});
+
 describe('TodoContext', () => {
+  beforeEach(() => {
+    mockSessionStorage.clear();
+    vi.clearAllMocks();
+  });
+
   it('provides empty todos array initially', () => {
     render(
       <TodoProvider>
