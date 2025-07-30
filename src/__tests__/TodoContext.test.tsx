@@ -33,6 +33,9 @@ const TestComponent = () => {
 };
 
 describe('TodoContext', () => {
+  afterEach(() => {
+    window.sessionStorage.clear();
+  });
   it('provides empty todos array initially', () => {
     render(
       <TodoProvider>
