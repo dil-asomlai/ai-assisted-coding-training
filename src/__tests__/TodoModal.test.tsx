@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { TodoModal } from '../components/TodoModal/TodoModal';
 import { useTodo } from '../hooks/useTodo';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 // Mock the useTodo hook
 vi.mock('../hooks/useTodo', () => ({
@@ -27,7 +29,11 @@ describe('TodoModal Component', () => {
   });
 
   it('renders create modal correctly', () => {
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="create" />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="create" />
+      </LocalizationProvider>
+    );
 
     // Check that the modal title is displayed
     expect(screen.getByText('Create Todo')).toBeInTheDocument();
@@ -50,7 +56,11 @@ describe('TodoModal Component', () => {
       completed: false,
     };
 
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="edit" initialValues={mockTodo} />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="edit" initialValues={mockTodo} />
+      </LocalizationProvider>
+    );
 
     // Check that the modal title is displayed
     expect(screen.getByText('Edit Todo')).toBeInTheDocument();
@@ -64,7 +74,11 @@ describe('TodoModal Component', () => {
 
   it('does not submit when title is empty', async () => {
     const user = userEvent.setup();
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="create" />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="create" />
+      </LocalizationProvider>
+    );
 
     // Try to submit without entering a title
     const submitButton = screen.getByTestId('submit-button');
@@ -77,7 +91,11 @@ describe('TodoModal Component', () => {
 
   it('calls addTodo when form is submitted in create mode', async () => {
     const user = userEvent.setup();
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="create" />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="create" />
+      </LocalizationProvider>
+    );
 
     // Fill in form fields
     await user.type(screen.getByTestId('title-input'), 'New Todo');
@@ -87,8 +105,8 @@ describe('TodoModal Component', () => {
     const submitButton = screen.getByTestId('submit-button');
     await user.click(submitButton);
 
-    // Should call addTodo with correct values
-    expect(mockAddTodo).toHaveBeenCalledWith('New Todo', 'New Description');
+    // Should call addTodo with correct values (third param may be undefined)
+    expect(mockAddTodo).toHaveBeenCalledWith('New Todo', 'New Description', undefined);
 
     // Should close the modal
     expect(mockOnClose).toHaveBeenCalled();
@@ -103,7 +121,11 @@ describe('TodoModal Component', () => {
       completed: false,
     };
 
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="edit" initialValues={mockTodo} />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="edit" initialValues={mockTodo} />
+      </LocalizationProvider>
+    );
 
     // Edit form fields
     await user.clear(screen.getByDisplayValue('Test Todo'));
@@ -131,7 +153,11 @@ describe('TodoModal Component', () => {
 
   it('closes the modal when cancel button is clicked', async () => {
     const user = userEvent.setup();
-    render(<TodoModal isOpen={true} onClose={mockOnClose} mode="create" />);
+    render(
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoModal isOpen={true} onClose={mockOnClose} mode="create" />
+      </LocalizationProvider>
+    );
 
     // Click cancel button
     await user.click(screen.getByText('Cancel'));

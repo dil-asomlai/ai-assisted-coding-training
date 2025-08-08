@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Todo } from '../types/Todo';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoContext } from './TodoContextType';
+import { loadTodosFromStorage, saveTodosToStorage } from '../utils/sessionStorage';
 
 export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(() => loadTodosFromStorage());
 
-  const addTodo = (title: string, description: string) => {
+  useEffect(() => {
+    saveTodosToStorage(todos);
+  }, [todos]);
+
+  const addTodo = (title: string, description: string, dueDate?: string) => {
     const newTodo: Todo = {
       id: uuidv4(),
       title,
       description,
       completed: false,
       createdAt: new Date(),
+      dueDate,
     };
     setTodos([...todos, newTodo]);
   };

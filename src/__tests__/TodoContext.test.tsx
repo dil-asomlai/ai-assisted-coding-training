@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { TodoProvider } from '../contexts/TodoContext';
 import { useTodo } from '../hooks/useTodo';
 // import { act } from 'react-dom/test-utils';
+import { beforeEach } from 'vitest';
 
 const TestComponent = () => {
   const { todos, addTodo, toggleTodoCompletion, deleteTodo } = useTodo();
@@ -33,6 +34,10 @@ const TestComponent = () => {
 };
 
 describe('TodoContext', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
   it('provides empty todos array initially', () => {
     render(
       <TodoProvider>

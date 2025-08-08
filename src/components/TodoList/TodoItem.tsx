@@ -1,7 +1,17 @@
 import React from 'react';
-import { ListItem, ListItemText, IconButton, Checkbox, Divider, Typography } from '@mui/material';
+import {
+  ListItem,
+  ListItemText,
+  IconButton,
+  Checkbox,
+  Divider,
+  Typography,
+  Stack,
+} from '@mui/material';
 import type { Todo } from '../../types/Todo';
 import { useTodo } from '../../hooks/useTodo';
+import { format } from 'date-fns';
+import { toStartOfDay } from '../../utils/sessionStorage';
 
 interface TodoItemProps {
   todo: Todo;
@@ -62,15 +72,31 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEditClick }) => {
             </Typography>
           }
           secondary={
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                textDecoration: todo.completed ? 'line-through' : 'none',
-              }}
-            >
-              {todo.description}
-            </Typography>
+            <Stack spacing={0.5}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  textDecoration: todo.completed ? 'line-through' : 'none',
+                }}
+              >
+                {todo.description}
+              </Typography>
+              {todo.dueDate && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color:
+                      !todo.completed &&
+                      toStartOfDay(new Date()) > toStartOfDay(new Date(todo.dueDate))
+                        ? 'error.main'
+                        : 'text.secondary',
+                  }}
+                >
+                  Due: {format(new Date(todo.dueDate), 'PP')}
+                </Typography>
+              )}
+            </Stack>
           }
         />
       </ListItem>

@@ -19,6 +19,7 @@ describe('TodoItem Component', () => {
     description: 'Test Description',
     completed: false,
     createdAt: new Date(),
+    dueDate: undefined,
   };
 
   const mockCompletedTodo: Todo = {
@@ -54,6 +55,18 @@ describe('TodoItem Component', () => {
 
     // Delete button should be present
     expect(screen.getByLabelText('delete')).toBeInTheDocument();
+  });
+
+  it('shows formatted due date when present', () => {
+    const future = new Date();
+    future.setDate(future.getDate() + 3);
+    render(
+      <TodoItem
+        todo={{ ...mockTodo, dueDate: future.toISOString() }}
+        onEditClick={mockOnEditClick}
+      />
+    );
+    expect(screen.getByText(/Due:/)).toBeInTheDocument();
   });
 
   it('renders completed todo with strikethrough styling', () => {
