@@ -43,6 +43,14 @@ Visit `http://localhost:5173` to view the app.
 - `npm run test` - Run tests
 - `npm run preview` - Preview production build locally
 
+### Session persistence
+
+Todos are persisted for the duration of a browser session using `window.sessionStorage` under the key `"todos"`.
+
+- Data is serialized as JSON; `createdAt` is stored as an ISO string and revived to a `Date` on load.
+- On corrupt or invalid data, the key is cleared and the app falls back to an empty list.
+- Writes happen on every `todos` change. If a storage quota error occurs, a toast appears: "Storage quota exceeded – latest changes may not be saved." The app continues using in-memory state.
+
 ## Project Structure
 
 The project follows a feature-based organization:

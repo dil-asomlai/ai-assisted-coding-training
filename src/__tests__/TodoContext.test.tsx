@@ -33,6 +33,14 @@ const TestComponent = () => {
 };
 
 describe('TodoContext', () => {
+  beforeEach(() => {
+    // Ensure no persisted todos bleed between tests
+    try {
+      window.sessionStorage.clear();
+    } catch {
+      // ignore
+    }
+  });
   it('provides empty todos array initially', () => {
     render(
       <TodoProvider>
