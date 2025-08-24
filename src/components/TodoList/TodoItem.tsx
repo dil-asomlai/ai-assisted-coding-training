@@ -2,6 +2,7 @@ import React from 'react';
 import { ListItem, ListItemText, IconButton, Checkbox, Divider, Typography } from '@mui/material';
 import type { Todo } from '../../types/Todo';
 import { useTodo } from '../../hooks/useTodo';
+import { format } from 'date-fns';
 
 interface TodoItemProps {
   todo: Todo;
@@ -62,15 +63,41 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, onEditClick }) => {
             </Typography>
           }
           secondary={
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                textDecoration: todo.completed ? 'line-through' : 'none',
-              }}
-            >
-              {todo.description}
-            </Typography>
+            <>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  textDecoration: todo.completed ? 'line-through' : 'none',
+                }}
+              >
+                {todo.description}
+              </Typography>
+              {todo.dueDate &&
+                (() => {
+                  const date = new Date(todo.dueDate);
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+                  const dateOnly = new Date(date);
+                  dateOnly.setHours(0, 0, 0, 0);
+                  const isOverdue = dateOnly < today && !todo.completed;
+                  const formatted = !isNaN(date.getTime()) ? format(date, 'PP') : null;
+                  return formatted ? (
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        display: 'block',
+                        mt: 0.5,
+                        color: isOverdue ? 'error.main' : 'text.secondary',
+                        fontWeight: isOverdue ? 600 : 400,
+                      }}
+                      data-testid="due-date-text"
+                    >
+                      Due {formatted}
+                    </Typography>
+                  ) : null;
+                })()}
+            </>
           }
         />
       </ListItem>

@@ -6,13 +6,14 @@ import { TodoContext } from './TodoContextType';
 export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  const addTodo = (title: string, description: string) => {
+  const addTodo = (title: string, description: string, dueDate?: string | null) => {
     const newTodo: Todo = {
       id: uuidv4(),
       title,
       description,
       completed: false,
       createdAt: new Date(),
+      ...(dueDate ? { dueDate } : {}),
     };
     setTodos([...todos, newTodo]);
   };

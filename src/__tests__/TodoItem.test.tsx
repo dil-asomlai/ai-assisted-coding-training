@@ -26,6 +26,11 @@ describe('TodoItem Component', () => {
     completed: true,
   };
 
+  const mockTodoWithDue: Todo = {
+    ...mockTodo,
+    dueDate: new Date('2025-02-15T00:00:00.000Z').toISOString(),
+  };
+
   const mockOnEditClick = vi.fn();
   const mockToggleTodoCompletion = vi.fn();
   const mockDeleteTodo = vi.fn();
@@ -99,5 +104,10 @@ describe('TodoItem Component', () => {
     await user.click(todoTitle);
 
     expect(mockOnEditClick).toHaveBeenCalledWith(mockTodo);
+  });
+
+  it('renders due date text when dueDate is present', () => {
+    render(<TodoItem todo={mockTodoWithDue} onEditClick={mockOnEditClick} />);
+    expect(screen.getByTestId('due-date-text')).toBeInTheDocument();
   });
 });

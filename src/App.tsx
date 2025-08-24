@@ -7,6 +7,8 @@ import { Footer } from './components/Layout/Footer';
 import { TodoList } from './components/TodoList/TodoList';
 import { CreateTodoButton } from './components/CreateTodoButton/CreateTodoButton';
 import type { Todo } from './types/Todo';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 function App() {
   const handleEditTodo = (todo: Todo) => {
@@ -17,51 +19,53 @@ function App() {
   return (
     <AtlasThemeProvider>
       <CssBaseline />
-      <TodoProvider>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            backgroundColor: theme => theme.palette.background.default,
-          }}
-        >
-          <Header />
-          <Container
-            maxWidth="md"
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <TodoProvider>
+          <Box
             sx={{
-              flexGrow: 1,
-              py: { xs: 2, sm: 3, md: 4 },
-              px: { xs: 2, sm: 3, md: 4 },
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: '100vh',
+              backgroundColor: theme => theme.palette.background.default,
             }}
           >
-            <Paper
-              elevation={2}
+            <Header />
+            <Container
+              maxWidth="md"
               sx={{
-                p: { xs: 2, sm: 3, md: 4 },
-                borderRadius: 2,
-                bgcolor: 'background.paper',
+                flexGrow: 1,
+                py: { xs: 2, sm: 3, md: 4 },
+                px: { xs: 2, sm: 3, md: 4 },
               }}
             >
-              <Box component="main">
-                <Box
-                  sx={{
-                    mb: 3,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <h2>Your Todos</h2>
-                  <CreateTodoButton />
+              <Paper
+                elevation={2}
+                sx={{
+                  p: { xs: 2, sm: 3, md: 4 },
+                  borderRadius: 2,
+                  bgcolor: 'background.paper',
+                }}
+              >
+                <Box component="main">
+                  <Box
+                    sx={{
+                      mb: 3,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <h2>Your Todos</h2>
+                    <CreateTodoButton />
+                  </Box>
+                  <TodoList onEditTodo={handleEditTodo} />
                 </Box>
-                <TodoList onEditTodo={handleEditTodo} />
-              </Box>
-            </Paper>
-          </Container>
-          <Footer />
-        </Box>
-      </TodoProvider>
+              </Paper>
+            </Container>
+            <Footer />
+          </Box>
+        </TodoProvider>
+      </LocalizationProvider>
     </AtlasThemeProvider>
   );
 }
